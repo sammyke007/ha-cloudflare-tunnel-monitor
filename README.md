@@ -1,6 +1,6 @@
 # Cloudflare Tunnel Monitor – Home Assistant Integration
 
-<img src="https://raw.githubusercontent.com/sammyke007/ha-cloudflare-tunnel-monitor/master/images/logo.png" width="128">
+<img src="https://raw.githubusercontent.com/sammyke007/ha-cloudflare-tunnel-monitor/master/images/logo.png" width="300">
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://hacs.xyz/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
