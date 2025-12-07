@@ -1,21 +1,21 @@
 {
-  "config":{
-     "step":{
-        "user":{
-           "data":{
-              "account_id":"Account ID",
-              "api_key":"API Token",
-              "friendly_name": "Friendly name"
-           }
+  "config": {
+    "step": {
+      "user": {
+        "data": {
+          "account_id": "Account ID",
+          "api_key": "API Token",
+          "friendly_name": "Friendly name"
         }
-     },
-     "error":{
-        "cannot_connect":"Kan geen verbinding maken met de API, controleer je API Token en internetverbinding.",
-        "invalid_auth":"Ongeldige authenticatie, controleer je gegevens.",
-        "unknown":"Onbekende fout, controleer je logs."
-     },
-     "abort":{
-        "single_instance_allowed":"Slechts 1 configuratie van deze integratie is toegestaan."
-     }
+      }
+    },
+    "error": {
+      "cannot_connect": "Kan geen verbinding maken met de API, controleer je API Token en internetverbinding.",
+      "invalid_auth": "Ongeldige authenticatie, controleer je gegevens.",
+      "unknown": "Onbekende fout, controleer je logs."
+    },
+    "abort": {
+      "single_instance_allowed": "Slechts 1 configuratie van deze integratie is toegestaan."
+    }
   }
 }
