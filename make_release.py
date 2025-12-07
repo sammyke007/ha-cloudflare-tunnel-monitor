@@ -106,7 +106,6 @@ def update_readme(new_tag, version_str):
     else:
         print("   ℹ Geen versiepatroon gevonden — prima.")
 
-
 # -----------------------------
 # Changelog genereren
 # -----------------------------
