@@ -1,13 +1,13 @@
-# Changes in v2025.12.3
+# Changes in v2025.12.4
 
 ## 🐛 Fixes
-- fix: update release body content
+- Fix release body handling and diff link
 
-## 📚 Documentation
-- docs: test changelog
+## 📦 Maintenance
+- chore: cleanup hacs.json
 
 ## 🔧 Other
-- Use loaded changelog body for releases
+- Update RELEASE_BODY.md
 
 ---
-🔗 **Full diff:** v2025.12.2...v2025.12.3
+🔗 **Full diff:** [v2025.12.3...v2025.12.4](https://github.com/sammyke007/ha-cloudflare-tunnel-monitor/compare/v2025.12.3...v2025.12.4)
