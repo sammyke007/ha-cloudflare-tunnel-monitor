@@ -110,8 +110,9 @@ def update_readme(new_tag, version_str):
 # -----------------------------
 # Changelog genereren
 # -----------------------------
+
 def build_changelog(new_tag, all_tags):
-    print("📝 Changelog genereren...")
+    print("📝 Mooie changelog genereren...")
 
     previous_tag = None
 
@@ -123,21 +124,79 @@ def build_changelog(new_tag, all_tags):
         previous_tag = sorted_tags[-1]
 
     if previous_tag:
-        print(f"   Vorige tag: {previous_tag}")
-        changelog = run_output([
-            "git", "log", f"{previous_tag}..HEAD", "--pretty=format:- %s"
-        ])
+        commits = run_output([
+            "git", "log",
+            f"{previous_tag}..HEAD",
+            "--pretty=format:%s"
+        ]).splitlines()
+        full_link = f"{previous_tag}...{new_tag}"
     else:
-        print("   Geen vorige tag gevonden → gebruik volledige geschiedenis")
-        changelog = run_output(["git", "log", "--pretty=format:- %s"])
+        commits = run_output(["git", "log", "--pretty=format:%s"]).splitlines()
+        full_link = f"{new_tag}"
+    
+    # Secties
+    sections = {
+        "✨ Features": [],
+        "🐛 Fixes": [],
+        "📦 Maintenance": [],
+        "📚 Documentation": [],
+        "🔧 Other": []
+    }
 
-    changelog = changelog.strip() or "- No changes listed"
+    # Woordsets per categorie
+    keywords = {
+        "✨ Features": ["add", "new", "feature", "improve", "support", "implement", "enable", "introduce"],
+        "🐛 Fixes": ["fix", "bug", "issue", "correct", "resolve", "repair", "broken"],
+        "📦 Maintenance": ["refactor", "cleanup", "clean", "chore", "optimize", "speed", "perf", "restructure"],
+        "📚 Documentation": ["readme", "doc", "docs", "explain", "documentation", "comment"],
+    }
 
-    text = f"## Changelog for {new_tag}\n\n{changelog}\n"
-    print()
-    print(text)
-    return text
+    for commit in commits:
+        commit_lower = commit.lower().strip()
 
+        # 1. Eerst checken of een commit al een prefix heeft
+        if commit_lower.startswith(("feat:", "feature:")):
+            sections["✨ Features"].append(commit)
+            continue
+        if commit_lower.startswith(("fix:", "bug:", "hotfix:")):
+            sections["🐛 Fixes"].append(commit)
+            continue
+        if commit_lower.startswith(("docs:", "doc:", "readme")):
+            sections["📚 Documentation"].append(commit)
+            continue
+        if commit_lower.startswith(("chore:", "refactor:", "clean:", "maint:", "ci:")):
+            sections["📦 Maintenance"].append(commit)
+            continue
+
+        # 2. Automatische classificatie zonder prefix
+        placed = False
+        for section, words in keywords.items():
+            if any(word in commit_lower for word in words):
+                sections[section].append(commit)
+                placed = True
+                break
+
+        if not placed:
+            sections["🔧 Other"].append(commit)
+
+    # Changelog tekst genereren
+    body = [f"# Changes in {new_tag}", ""]
+
+    for title, items in sections.items():
+        if items:
+            body.append(f"## {title}")
+            body.extend([f"- {item}" for item in items])
+            body.append("")
+
+    body.append(f"---\n🔗 **Full diff:** {full_link}\n")
+
+    final_body = "\n".join(body)
+
+    # Wegschrijven voor release action
+    Path("RELEASE_BODY.md").write_text(final_body, encoding="utf-8")
+
+    print(final_body)
+    return final_body
 
 # -----------------------------
 # Main
@@ -166,7 +225,7 @@ def main():
 
     # 5. Annotated tag met changelog
     print("🏷️ Tag aanmaken...")
-    run(["git", "tag", "-a", new_tag, "-m", changelog_text])
+    run(["git", "tag", "-a", new_tag, "-m", f"Release {new_tag}"])
 
     # 6. Push commit + tag
     print("⬆️ Pushen van commit + tag...")
