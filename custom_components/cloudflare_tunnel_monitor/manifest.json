@@ -1,11 +1,13 @@
 {
-  "domain": "cloudflare_tunnel_monitor",
-  "name": "Cloudflare Tunnel Monitor",
-  "codeowners": ["@sammyke007"],
-  "config_flow": true,
-  "documentation": "https://github.com/sammyke007/ha-cloudflare-tunnel-monitor",
-  "integration_type": "service",
-  "iot_class": "cloud_polling",
-  "issue_tracker": "https://github.com/sammyke007/ha-cloudflare-tunnel-monitor/issues",
-  "version": "2025.12.0"
+    "domain": "cloudflare_tunnel_monitor",
+    "name": "Cloudflare Tunnel Monitor",
+    "codeowners": [
+        "@sammyke007"
+    ],
+    "config_flow": true,
+    "documentation": "https://github.com/sammyke007/ha-cloudflare-tunnel-monitor",
+    "integration_type": "service",
+    "iot_class": "cloud_polling",
+    "issue_tracker": "https://github.com/sammyke007/ha-cloudflare-tunnel-monitor/issues",
+    "version": "2025.12.1"
 }
