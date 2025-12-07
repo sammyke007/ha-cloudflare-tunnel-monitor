@@ -99,12 +99,12 @@ You need:
 
 - **Account ID**
 
-<img src="images/AccountID.png" alt="Account ID" width="300">
+<img src="images/AccountID.png" alt="Account ID" width="500">
 
 - **API Token** with:  
   `Account → Cloudflare Tunnel → Read`
 
-<img src="images/API-Token.png" alt="Account ID" width="300">
+<img src="images/API-Token.png" alt="Account ID" width="500">
 
 ### Step 2 — Add integration via UI
 
