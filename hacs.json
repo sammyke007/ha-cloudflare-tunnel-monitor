@@ -1,7 +1,6 @@
 {
   "name": "Cloudflare Tunnel Monitor",
   "content_in_root": false,
-  "domain": "cloudflare_tunnel_monitor",
   "homeassistant": "2023.6.0",
   "render_readme": true
 }
