@@ -1,65 +1,186 @@
-# Cloudflare Tunnel Monitor Home Assistant Integration
+# Cloudflare Tunnel Monitor – Home Assistant Integration
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-![Cloudflare Tunnel Monitor|128](https://raw.githubusercontent.com/deadbeef3137/ha-cloudflare-tunnel-monitor/master/images/logo.png)
+<img src="https://raw.githubusercontent.com/sammyke007/ha-cloudflare-tunnel-monitor/master/images/logo.png" width="128">
 
-## Description
+[![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://hacs.xyz/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+![Version](https://img.shields.io/badge/Release-2025.12.0-blue.svg)
+![Cloudflare](https://img.shields.io/badge/Cloudflare-Tunnels-F38020?logo=cloudflare&logoColor=white)
 
-This custom integration for Home Assistant allows users to monitor the status of their Cloudflare Tunnels directly from their Home Assistant instance. The integration fetches the status of Cloudflare Tunnels and presents it as sensor entities in Home Assistant.
+Monitor your **Cloudflare Tunnels**, **connectors**, **sessions**, and **cloudflared version status** directly inside Home Assistant.
 
-## Installation
+This is an enhanced and extended fork of the original integration by  
+[@deadbeef3137](https://github.com/deadbeef3137/ha-cloudflare-tunnel-monitor),  
+featuring major improvements, bug fixes, and advanced connector intelligence.
 
-### Via HACS (Home Assistant Community Store)
+---
 
-1. Navigate to the HACS page on your Home Assistant instance.
-2. Go to the "Integrations" tab and click the "Explore & Add Repositories" button.
-3. Search for "Cloudflare Tunnel Monitor" and select it.
-4. Click on "Install this repository in HACS".
-5. Restart your Home Assistant instance.
+## ✨ Features
 
-### Manual Installation
+### ✔️ Monitor all Cloudflare Tunnels for an account  
+Each Cloudflare account becomes a **Home Assistant device**, with one entity per tunnel.
 
-1. Clone this repository or download the zip file.
-2. Copy the `cloudflare_tunnel_monitor` directory from the `custom_components` directory in this repository to the `custom_components` directory on your Home Assistant instance.
-3. Restart your Home Assistant instance.
+### ✔️ Connector grouping & diagnostics  
+Cloudflare exposes multiple raw “connections”.  
+These are grouped by **client_id**, producing clean connector objects including:
 
-## Configuration
+- `client_id`
+- `version`
+- `sessions`
+- `edges`
+- `origin_ips`
+- `pending_reconnect`
+- `opened_at_latest`
 
-### Cloudflare Setup
-<span><strong style="color:deepskyblue;">1. Copy your Account ID.</strong></span>
+Global attributes include:
 
-![Account ID](https://raw.githubusercontent.com/deadbeef3137/imagenes-readme/master/AccountID.png)
+- `connector_count`
+- `session_count`
 
-<span><strong style="color:deepskyblue;">2. Create an API Token.</strong></span>
+### ✔️ Cloudflared version tracking  
+Automatically retrieves the latest cloudflared version from GitHub.
 
-![API Token](https://raw.githubusercontent.com/deadbeef3137/imagenes-readme/master/API-Token.png)
+Per connector:
+
+- `version`
+- `latest_version`
+- `is_latest`
+- `update_available`
+- `version_diff`
+
+Global:
+
+- `latest_cloudflared_version`
+
+### ✔️ Device-based entity organization  
+- 1 device per Cloudflare account  
+- Multiple tunnels per account  
+- Proper HA device identifiers and manufacturer metadata
+
+### ✔️ Multi-language support  
+Included translations:
+
+- 🇬🇧 English  
+- 🇳🇱 Dutch  
+- 🇪🇸 Spanish  
+- 🇵🇹 Portuguese  
+
+### ✔️ HACS-compatible  
+Works via custom repositories.
+
+---
+
+## 📦 Installation
+
+### 🟦 Option 1 — HACS (recommended)
+
+1. Go to **HACS → Integrations**
+2. Click **⋯ → Custom repositories**
+3. Add: `https://github.com/sammyke007/ha-cloudflare-tunnel-monitor` - Category: **Integration**
+4. Install the integration
+5. Restart Home Assistant
+
+---
+
+### 🟧 Option 2 — Manual installation
+
+Copy the directory: `custom_components/cloudflare_tunnel_monitor` into: `/config/custom_components/`
+
+Restart Home Assistant.
+
+---
+
+## 🔧 Configuration
+
+### Step 1 — Get Cloudflare credentials
+
+You need:
+
+- **Account ID**
+- **API Token** with:  
+  `Account → Cloudflare Tunnel → Read`
+
+### Step 2 — Add integration via UI
+
+1. Go to **Settings → Devices & Services**
+2. Click **Add Integration**
+3. Search **Cloudflare Tunnel Monitor**
+4. Enter:
+   - Account ID  
+   - API Token  
+   - Friendly name (e.g. *Home*, *Parents*, *Brother*)
+
+Home Assistant will create:
+
+- 1 device for this account  
+- 1 sensor per tunnel  
+- Full connector + version attributes
+
+---
+
+## 📊 Example Tunnel Entity
+
+A typical entity:
+
+<img width="459" height="72" alt="image" src="https://github.com/user-attachments/assets/c4c7ddc9-77d9-4be4-8fb3-58cdf7a7602a" />
 
 
-### Via UI
+Attributes include:
 
-1. Navigate to "Configuration" -> "Integrations" -> "+".
-2. Search for "Cloudflare Tunnel Monitor" and select it.
-3. Fill in the required information and click "Submit".
+- `status`
+- `connector_count`
+- `session_count`
+- `connectors` (cleaned & grouped)
+- `latest_cloudflared_version`
+- per-connector version fields
 
-### Configuration Variables
+---
 
-- `api_key`: Your Cloudflare API Token with `Account:Cloudflare Tunnel:Read` permissions
-- `account_id`: Your Cloudflare Account ID.
+A full example Lovelace card (Mushroom-based) is included in this repository:
+
+👉 [`examples/lovelace_example.yaml`](https://github.com/sammyke007/ha-cloudflare-tunnel-monitor/blob/main/examples/lovelace_example.yaml)
+
+<img width="355" height="535" alt="image" src="https://github.com/user-attachments/assets/3a3e6a9b-ec63-4e51-907f-30caf7657b82" />
+
+This card shows:
+
+- Tunnel status  
+- Connector list  
+- Session counts  
+- Cloudflared version comparison  
+- Edges (Cloudflare POPs)  
+- Connector health and diagnostics  
+
+You can simply replace the entity ID with your own tunnel sensor: ENTITY_ID ==> sensor.cloudflare_tunnel_friendlyname
+
+---
+
+## 🐞 Support & Issues
+
+Report issues or request features here:
+
+👉 https://github.com/sammyke007/ha-cloudflare-tunnel-monitor/issues
+
+---
+
+## ❤️ Credits
+
+Original integration by **@deadbeef3137**  
+Improved and maintained by **@sammyke007**
+
+---
+
+## 📄 License
+
+This project is distributed under the **MIT License**.  
+See the `LICENSE` file for details.
+
+---
+
+## ⚠️ Disclaimer
+
+This project is **not affiliated with or endorsed by Cloudflare**.
 
 
-## Usage
 
-Upon successful configuration, the integration will create sensor entities for each Cloudflare Tunnel. These sensors will reflect the current status of each tunnel.
-
-## Support
-
-If you encounter any issues or require further assistance, please raise an issue on this [GitHub repository](https://github.com/deadbeef3137/ha-cloudflare-tunnel-monitor/issues).
-
-## License
-
-This integration is released under the [MIT License](https://opensource.org/licenses/MIT).
-
-## Disclaimer
-
-This project is not affiliated with or endorsed by Cloudflare.
 
