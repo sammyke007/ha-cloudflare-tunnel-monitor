@@ -10,17 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out repo
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Load release body
-        id: load_body
-        run: |
-          echo "body<<EOF" >> $GITHUB_OUTPUT
-          cat RELEASE_BODY.md >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-
-      - name: Create release
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          body: ${{ steps.load_body.outputs.body }}
+          body_path: RELEASE_BODY.md
+          generate_release_notes: false
