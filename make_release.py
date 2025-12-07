@@ -10,33 +10,40 @@ MANIFEST_PATH = Path("custom_components/cloudflare_tunnel_monitor/manifest.json"
 README_PATH = Path("README.md")
 
 
+# -----------------------------
+# Helpers
+# -----------------------------
 def run_output(cmd):
-    """Run a command and return stdout as string."""
+    """Run a command and return stdout."""
     return subprocess.check_output(cmd, text=True).strip()
 
 
 def run(cmd):
-    """Run a command, fail loudly on error."""
+    """Run a command that must succeed."""
     subprocess.run(cmd, check=True)
 
 
 def ensure_clean_worktree():
+    """Stop if working tree contains uncommitted changes."""
     status = run_output(["git", "status", "--porcelain"])
     if status:
-        print("❌ Working tree is niet clean. Commit of stash eerst je wijzigingen.")
+        print("❌ Working tree is niet clean. Commit of stash je wijzigingen eerst.")
         print(status)
         sys.exit(1)
 
 
+# -----------------------------
+# Versioning
+# -----------------------------
 def get_next_tag():
-    """Bepaal volgende vYYYY.MM.X tag op basis van huidige maand en bestaande tags."""
+    """Determine next vYYYY.MM.X release tag."""
     now = datetime.datetime.now()
     prefix = f"v{now.year}.{now.month:02d}"
 
     tags_raw = run_output(["git", "tag"])
     tags = tags_raw.splitlines() if tags_raw else []
 
-    # Filter tags van deze maand, bv. v2025.12.0, v2025.12.1
+    # Filter tags from this month: v2025.12.0, v2025.12.1
     month_tags = [t for t in tags if t.startswith(prefix + ".")]
 
     max_num = -1
@@ -49,104 +56,126 @@ def get_next_tag():
 
     next_num = max_num + 1
     new_tag = f"{prefix}.{next_num}"
-    return new_tag, tags  # tags = alle bestaande tags
+    return new_tag, tags
 
 
+# -----------------------------
+# Update manifest.json
+# -----------------------------
 def update_manifest(version_str):
-    """Zet manifest.json versie op bv. 2025.12.1 (zonder 'v')."""
     print("🔧 manifest.json updaten...")
-    manifest = json.loads(MANIFEST_PATH.read_text())
+
+    # Veilig als UTF-8 lezen & schrijven
+    manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     manifest["version"] = version_str
-    MANIFEST_PATH.write_text(json.dumps(manifest, indent=4))
+
+    MANIFEST_PATH.write_text(json.dumps(manifest, indent=4), encoding="utf-8")
     run(["git", "add", str(MANIFEST_PATH)])
+
     print(f"   ✔ manifest.json → version = {version_str}")
 
 
+# -----------------------------
+# Update README.md
+# -----------------------------
 def update_readme(new_tag, version_str):
-    """Update versie in README.md indien aanwezig."""
     if not README_PATH.exists():
-        print("ℹ README.md niet gevonden, skip.")
+        print("ℹ README.md niet gevonden — skipping.")
         return
 
     print("🔧 README.md versie updaten (indien gevonden)...")
-    readme = README_PATH.read_text()
+
+    try:
+        readme = README_PATH.read_text(encoding="utf-8")
+    except Exception as e:
+        print("❌ Kon README.md niet lezen als UTF-8:", e)
+        sys.exit(1)
 
     updated = readme
 
-    # 1) Patronen met 'v2025.12.0'
+    # Patronen met 'v2025.12.0'
     updated = re.sub(r"v20\d{2}\.\d{2}\.\d+", new_tag, updated)
 
-    # 2) Patronen met '2025.12.0' (zonder 'v')
+    # Patronen met '2025.12.0' (zonder 'v')
     updated = re.sub(r"20\d{2}\.\d{2}\.\d+", version_str, updated)
 
     if updated != readme:
-        README_PATH.write_text(updated)
+        README_PATH.write_text(updated, encoding="utf-8")
         run(["git", "add", str(README_PATH)])
         print("   ✔ README.md bijgewerkt")
     else:
-        print("   ℹ Geen versiepatroon gevonden in README.md (prima).")
+        print("   ℹ Geen versiepatroon gevonden — prima.")
 
 
+# -----------------------------
+# Changelog genereren
+# -----------------------------
 def build_changelog(new_tag, all_tags):
-    """Genereer changelog op basis van commits sinds vorige tag."""
     print("📝 Changelog genereren...")
+
     previous_tag = None
 
     if all_tags:
-        # Sorteer tags ruwweg numeriek (werkt voor vYYYY.MM.X)
-        sorted_tags = sorted(all_tags, key=lambda s: list(map(int, re.findall(r"\d+", s))))
+        sorted_tags = sorted(
+            all_tags,
+            key=lambda s: list(map(int, re.findall(r"\d+", s)))
+        )
         previous_tag = sorted_tags[-1]
 
     if previous_tag:
         print(f"   Vorige tag: {previous_tag}")
-        changelog = run_output(["git", "log", f"{previous_tag}..HEAD", "--pretty=format:- %s"])
+        changelog = run_output([
+            "git", "log", f"{previous_tag}..HEAD", "--pretty=format:- %s"
+        ])
     else:
-        print("   Geen vorige tag gevonden, gebruik volledige geschiedenis.")
+        print("   Geen vorige tag gevonden → gebruik volledige geschiedenis")
         changelog = run_output(["git", "log", "--pretty=format:- %s"])
 
-    if not changelog.strip():
-        changelog = "- No changes listed"
+    changelog = changelog.strip() or "- No changes listed"
 
-    changelog_text = f"## Changelog for {new_tag}\n\n{changelog}\n"
+    text = f"## Changelog for {new_tag}\n\n{changelog}\n"
     print()
-    print(changelog_text)
-    return changelog_text
+    print(text)
+    return text
 
 
+# -----------------------------
+# Main
+# -----------------------------
 def main():
     ensure_clean_worktree()
 
     new_tag, all_tags = get_next_tag()
-    version_str = new_tag.lstrip("v")  # bv. 2025.12.1
+    version_str = new_tag.lstrip("v")  # manifest heeft geen 'v'
 
     print(f"\n🚀 Nieuwe release-tag wordt: {new_tag}")
     print(f"   (manifest.json versie: {version_str})\n")
 
-    # 1) manifest.json → versie bijwerken
+    # 1. manifest.json bijwerken
     update_manifest(version_str)
 
-    # 2) README.md (optioneel) bijwerken
+    # 2. README.md bijwerken
     update_readme(new_tag, version_str)
 
-    # 3) Changelog maken
+    # 3. Changelog genereren
     changelog_text = build_changelog(new_tag, all_tags)
 
-    # 4) Commit maken
+    # 4. Commit maken
     print("💾 Commit maken...")
     run(["git", "commit", "-m", f"Release {version_str}"])
 
-    # 5) Annotated tag met changelog als message
+    # 5. Annotated tag met changelog
     print("🏷️ Tag aanmaken...")
     run(["git", "tag", "-a", new_tag, "-m", changelog_text])
 
-    # 6) Push branch + tag
+    # 6. Push commit + tag
     print("⬆️ Pushen van commit + tag...")
     run(["git", "push"])
     run(["git", "push", "origin", new_tag])
 
     print("\n🎉 Klaar!")
     print(f"👉 Nieuwe tag gepusht: {new_tag}")
-    print("👉 GitHub Actions zal nu automatisch een release aanmaken.")
+    print("👉 GitHub Actions release workflow zal nu automatisch starten.")
 
 
 if __name__ == "__main__":
