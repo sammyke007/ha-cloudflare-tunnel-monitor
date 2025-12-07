@@ -128,6 +128,8 @@ Home Assistant will create:
 
 A typical entity:
 
+`sensor.cloudflare_tunnel_cauwelaert`
+
 <img width="459" height="72" alt="image" src="https://github.com/user-attachments/assets/c4c7ddc9-77d9-4be4-8fb3-58cdf7a7602a" />
 
 
