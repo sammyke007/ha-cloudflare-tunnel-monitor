@@ -4,7 +4,8 @@
             "user": {
                 "data": {
                     "account_id": "ID de cuenta",
-                    "api_key": "API Token"
+                    "api_key": "API Token",
+                    "friendly_name": "Nombre amigable"
                 }
             }
         },

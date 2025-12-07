@@ -8,7 +8,9 @@ CONF_API_KEY = "api_key"
 # Constants for labels displayed in the user interface
 LABEL_ACCOUNT_ID = "Account ID"
 LABEL_API_KEY = "API Token"
+LABEL_FRIENDLY_NAME = "Friendly name"
 
 # Constants for placeholders or suggested values
 PLACEHOLDER_API_KEY = "api-token"
 PLACEHOLDER_ACCOUNT_ID = "your-account-id"
+PLACEHOLDER_FRIENDLY_NAME = "friendly-name"
