@@ -1,0 +1,61 @@
+# Example Lovelace card for Cloudflare Tunnel Monitor
+# Replace ENTITY_ID with your tunnel sensor, e.g. sensor.cloudflare_tunnel_cauwelaert
+
+type: vertical-stack
+cards:
+  - type: custom:mushroom-template-card
+    entity: ENTITY_ID
+    primary: >
+      {{ state_attr(ENTITY_ID, 'friendly_name') }}
+    secondary: >
+      {{ states(ENTITY_ID) | title }}
+    icon: >
+      {% set s = states(ENTITY_ID) %}
+      {% if s == 'healthy' %}
+        mdi:cloud-check
+      {% elif s == 'degraded' %}
+        mdi:cloud-alert
+      {% elif s == 'inactive' %}
+        mdi:cloud-off-outline
+      {% else %}
+        mdi:cloud-alert-outline
+      {% endif %}
+    tap_action:
+      action: more-info
+    color: >
+      {% set s = states(ENTITY_ID) %}
+      {% if s == 'healthy' %}
+        green
+      {% elif s == 'degraded' %}
+        amber
+      {% elif s == 'inactive' %}
+        grey
+      {% else %}
+        red
+      {% endif %}
+    fill_container: false
+    layout: horizontal
+    multiline_secondary: true
+
+  - type: markdown
+    content: >
+      {% set connectors = state_attr(ENTITY_ID, 'connectors') %}
+      {% set count = state_attr(ENTITY_ID, 'connector_count') %}
+      {% set latest = state_attr(ENTITY_ID, 'latest_cloudflared_version') %}
+
+      ## 🔌 Connector Details ({{ count }})
+      Latest cloudflared: **{{ latest }}**
+
+      {% for c in connectors %}
+      ### Connector {{ loop.index }}
+      **Client ID:** `{{ c.client_id }}`  
+      **Version:** `{{ c.version }}`  
+      **Latest:** `{{ c.latest_version }}`  
+      **Up-to-date:** {{ '✔ Yes' if c.is_latest else '❌ No' }}  
+      **Sessions:** `{{ c.sessions }}`  
+      **Edges:** {{ c.edges | join(', ') }}  
+      **Pending reconnect:** `{{ c.pending_reconnect }}`  
+      **Latest Open:** {{ c.opened_at_latest | replace("T", " ") | replace("Z","") }}
+
+      ---
+      {% endfor %}
