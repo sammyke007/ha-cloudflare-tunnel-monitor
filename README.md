@@ -5,7 +5,7 @@
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://hacs.xyz/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-![Version](https://img.shields.io/badge/Release-2025.12.7-blue.svg)
+![Version](https://img.shields.io/badge/Release-2025.12.0-blue.svg)
 ![Cloudflare](https://img.shields.io/badge/Cloudflare-Tunnels-F38020?logo=cloudflare&logoColor=white)
 
 Monitor your **Cloudflare Tunnels**, **connectors**, **sessions**, and **cloudflared version status** directly inside Home Assistant.
