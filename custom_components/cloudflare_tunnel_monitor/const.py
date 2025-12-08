@@ -3,6 +3,7 @@ DOMAIN = "cloudflare_tunnel_monitor"
 # Constants for user data keys
 CONF_ACCOUNT_ID = "account_id"
 CONF_API_KEY = "api_key"
+CONF_FRIENDLY_NAME = "friendly_name"
 
 # Constants for labels displayed in the user interface
 LABEL_ACCOUNT_ID = "Account ID"
