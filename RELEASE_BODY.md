@@ -1,13 +1,14 @@
-# Changes in v2025.12.4
+# Changes in v2025.12.5
 
 ## 🐛 Fixes
-- Fix release body handling and diff link
+- Fix lost code
+- fix: update hacs.json (again)
 
 ## 📦 Maintenance
-- chore: cleanup hacs.json
+- chore: HACS requests
 
-## 🔧 Other
-- Update RELEASE_BODY.md
+## 📚 Documentation
+- docs: edit readme
 
 ---
-🔗 **Full diff:** [v2025.12.3...v2025.12.4](https://github.com/sammyke007/ha-cloudflare-tunnel-monitor/compare/v2025.12.3...v2025.12.4)
+🔗 **Full diff:** [v2025.12.4...v2025.12.5](https://github.com/sammyke007/ha-cloudflare-tunnel-monitor/compare/v2025.12.4...v2025.12.5)
