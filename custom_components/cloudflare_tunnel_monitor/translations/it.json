@@ -1,0 +1,21 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "data": {
+          "account_id": "ID account",
+          "api_key": "Token API",
+          "friendly_name": "Nome visualizzato"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Impossibile connettersi al servizio. Verifica il tuo token API e la connessione a Internet.",
+      "invalid_auth": "Autenticazione non valida. Controlla le tue credenziali.",
+      "unknown": "Errore sconosciuto. Controlla i registri."
+    },
+    "abort": {
+      "single_instance_allowed": "È consentita una sola istanza di questa integrazione."
+    }
+  }
+}

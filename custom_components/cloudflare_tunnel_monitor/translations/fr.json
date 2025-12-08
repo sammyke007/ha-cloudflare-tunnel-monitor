@@ -1,0 +1,21 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "data": {
+          "account_id": "ID du compte",
+          "api_key": "Jeton API",
+          "friendly_name": "Nom d’affichage"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Impossible de se connecter au service. Veuillez vérifier votre jeton API et votre connexion Internet.",
+      "invalid_auth": "Authentification invalide. Veuillez vérifier vos identifiants.",
+      "unknown": "Erreur inconnue. Veuillez consulter les journaux."
+    },
+    "abort": {
+      "single_instance_allowed": "Une seule instance de cette intégration est autorisée."
+    }
+  }
+}

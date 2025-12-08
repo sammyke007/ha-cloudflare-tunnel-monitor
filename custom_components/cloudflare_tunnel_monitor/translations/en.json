@@ -5,17 +5,17 @@
         "data": {
           "account_id": "Account ID",
           "api_key": "API Token",
-          "friendly_name": "Friendly name"
+          "friendly_name": "Display name"
         }
       }
     },
     "error": {
-      "cannot_connect": "Cannot connect to the service, please check your API Token and internet connection.",
-      "invalid_auth": "Invalid authentication, please check your credentials.",
-      "unknown": "Unknown error, please check the logs."
+      "cannot_connect": "Cannot connect to the service. Please check your API token and internet connection.",
+      "invalid_auth": "Invalid authentication. Please check your credentials.",
+      "unknown": "Unknown error. Please check the logs."
     },
     "abort": {
-      "single_instance_allowed": "Only a single configuration of this integration is allowed."
+      "single_instance_allowed": "Only a single instance of this integration is allowed."
     }
   }
 }

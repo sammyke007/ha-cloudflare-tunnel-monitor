@@ -3,16 +3,16 @@
     "step": {
       "user": {
         "data": {
-          "account_id": "ID de cuenta",
-          "api_key": "API Token",
-          "friendly_name": "Nombre amigable"
+          "account_id": "ID de la cuenta",
+          "api_key": "Token de API",
+          "friendly_name": "Nombre para mostrar"
         }
       }
     },
     "error": {
-      "cannot_connect": "No se puede conectar al servicio, por favor verifica tu Token de la API y la conexión a internet.",
-      "invalid_auth": "Autenticación inválida, por favor verifica tus credenciales.",
-      "unknown": "Error desconocido, por favor revisa los registros."
+      "cannot_connect": "No se puede conectar con el servicio. Verifica tu token de API y la conexión a Internet.",
+      "invalid_auth": "Autenticación no válida. Verifica tus credenciales.",
+      "unknown": "Error desconocido. Revisa los registros."
     },
     "abort": {
       "single_instance_allowed": "Solo se permite una única configuración de esta integración."
