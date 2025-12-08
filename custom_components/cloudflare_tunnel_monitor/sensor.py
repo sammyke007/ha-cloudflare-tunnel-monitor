@@ -47,7 +47,9 @@ class CloudflareTunnelSensor(CoordinatorEntity, SensorEntity):
 
         name = tunnel.get("name") or self._tunnel_id
         self._attr_unique_id = f"{DOMAIN}_{coordinator.account_id}_{self._tunnel_id}"
-        self._attr_name = f"Tunnel {name}"
+        # Friendly name becomes "Cloudflare Tunnel <tunnelname>"
+        self._attr_name = f"Cloudflare Tunnel {name}"
+
 
     # -------------------------------------------------------------------------
     # Helpers
